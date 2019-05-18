@@ -1,15 +1,20 @@
 #!/bin/bash
 
+# Stop on error
+set -e
+
 main() {
-    switchToRoot
+    isRoot
     updateUbuntu
     installApt git gnome-tweaks arc-theme wget curl
     installJava
 }
 
-function switchToRoot() {
-    exeinf "Swicthing to root"
-    sudo -s << EOF
+function isRoot() {
+    exeinf "Checking for root"
+    if [[ ! "${EUID}" -eq 0 ]]; then
+        echo "Not root user, execute script as root. Example: sudo ./setupUbuntu.bsh"
+    fi
 }
 
 function updateUbuntu() {
