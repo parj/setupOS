@@ -22,6 +22,7 @@ function updateUbuntu() {
     exeinf "Upgrading linux"
     apt-get update 
     apt-get -y upgrade 
+    apt autoremove
 }
 
 function installApt() {
@@ -39,7 +40,7 @@ function installJava() {
         rm -f $outputFile
         wget https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.3%2B7/OpenJDK11U-jdk_x64_linux_hotspot_11.0.3_7.tar.gz -O $outputFile
     fi
-    tar -C /tmp xvzf /tmp/jdk.tar.gz
+    tar -C /tmp -xvzf /tmp/jdk.tar.gz
     mkdir -p /usr/lib/jvm
     mv /tmp/openjd* /usr/lib/jvm
 }
