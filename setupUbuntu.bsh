@@ -14,12 +14,14 @@ function isRoot() {
     exeinf "Checking for root"
     if [[ ! "${EUID}" -eq 0 ]]; then
         echo "Not root user, execute script as root. Example: sudo ./setupUbuntu.bsh"
+        exit 1
     fi
 }
 
 function updateUbuntu() {
     exeinf "Upgrading linux"
-    apt-get -y update upgrade 
+    apt-get update 
+    apt-get -y upgrade 
 }
 
 function installApt() {
