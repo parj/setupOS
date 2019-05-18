@@ -34,7 +34,7 @@ function installJava() {
     outputFile="/tmp/jdk.tar.gz"
     checksumJava=$(/usr/bin/md5sum -c <<<"bff000442fd0d21cb70ffea8cf565c00 /tmp/jdk.tar.gz")
 
-    if [[ ! $checksumJava == "$outputFile: OK" ]] then
+    if [[ ! $checksumJava == "$outputFile: OK" ]]; then
         exit 1
         rm -f $outputFile
         wget https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.3%2B7/OpenJDK11U-jdk_x64_linux_hotspot_11.0.3_7.tar.gz -O $outputFile
