@@ -1,0 +1,45 @@
+#!/bin/bash
+
+main() {
+    switchToRoot
+    updateUbuntu
+    installApt git gnome-tweaks arc-theme wget curl
+    installJava
+}
+
+function switchToRoot() {
+    exeinf "Swicthing to root"
+    sudo -s << EOF
+}
+
+function updateUbuntu() {
+    exeinf "Upgrading linux"
+    apt-get -y update upgrade 
+}
+
+function installApt() {
+    exeinf "Install $@"
+    apt-get -y install $@
+}
+
+function installJava() {
+    exeinf "Installing openjdk 11.0.3"
+    wget https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.3%2B7/OpenJDK11U-jdk_x64_linux_hotspot_11.0.3_7.tar.gz -O /tmp/jdk.tar.gz
+    mkdir -p /usr/lib/jvm
+    mv /tmp/openjd* /usr/lib/jvm
+}
+
+# From gist - https://gist.github.com/Bost/54291d824149f0c4157b40329fceb02c
+tstp() {
+    date +"%Y-%m-%d %H:%M:%S,%3N"
+}
+# From gist - https://gist.github.com/Bost/54291d824149f0c4157b40329fceb02c
+exeinf() {
+    echo "INFO " $(tstp) "$ "$@
+}
+# From gist - https://gist.github.com/Bost/54291d824149f0c4157b40329fceb02c
+exeerr() {
+    echo "ERROR" $(tstp) "$ "$@
+}
+
+main "$@"
