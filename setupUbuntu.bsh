@@ -31,7 +31,15 @@ function installApt() {
 
 function installJava() {
     exeinf "Installing openjdk 11.0.3"
-    wget https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.3%2B7/OpenJDK11U-jdk_x64_linux_hotspot_11.0.3_7.tar.gz -O /tmp/jdk.tar.gz
+    outputFile="/tmp/jdk.tar.gz"
+    checksumJava=$(/usr/bin/md5sum -c <<<"bff000442fd0d21cb70ffea8cf565c00 /tmp/jdk.tar.gz")
+
+    if [[ ! $checksumJava == "$outputFile: OK" ]] then
+        exit 1
+        rm -f $outputFile
+        wget https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.3%2B7/OpenJDK11U-jdk_x64_linux_hotspot_11.0.3_7.tar.gz -O $outputFile
+    fi
+    tar -C /tmp xvzf /tmp/jdk.tar.gz
     mkdir -p /usr/lib/jvm
     mv /tmp/openjd* /usr/lib/jvm
 }
