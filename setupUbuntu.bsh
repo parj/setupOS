@@ -31,18 +31,25 @@ function installApt() {
 }
 
 function installJava() {
-    exeinf "Installing openjdk 11.0.3"
+    exeinf "STARTED - Installing openjdk 11.0.3"
     outputFile="/tmp/jdk.tar.gz"
     checksumJava=$(/usr/bin/md5sum -c <<<"bff000442fd0d21cb70ffea8cf565c00 /tmp/jdk.tar.gz")
 
     if [[ ! $checksumJava == "$outputFile: OK" ]]; then
-        exit 1
+        exeinf "Downloading Java as checksum failed or file missing"
         rm -f $outputFile
         wget https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.3%2B7/OpenJDK11U-jdk_x64_linux_hotspot_11.0.3_7.tar.gz -O $outputFile
     fi
+
+    exeinf "Extracting java"
     tar -C /tmp -xvzf /tmp/jdk.tar.gz
     mkdir -p /usr/lib/jvm
-    mv /tmp/openjd* /usr/lib/jvm
+    mv /tmp/jdk-11.0.3+7 /usr/lib/jvm
+
+    exeinf "Creating soft link /usr/lib/jvm/jdk"
+    ln -s /usr/lib/jvm/jdk-11.0.3+7 /usr/lib/jvm/jdk
+    /usr/lib/jvm/jdk/bin/java -version
+    exeinf "DONE - Installing openjdk 11.0.3"
 }
 
 # From gist - https://gist.github.com/Bost/54291d824149f0c4157b40329fceb02c
