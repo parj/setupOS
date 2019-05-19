@@ -123,7 +123,7 @@ function installDeb() {
 
     remove $outputFile
     
-    exinf "DONE - Installing VSCode"
+    exeinf "DONE - Installing VSCode"
 }
 
 # From gist - https://gist.github.com/Bost/54291d824149f0c4157b40329fceb02c
