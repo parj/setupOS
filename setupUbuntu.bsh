@@ -121,7 +121,7 @@ function installDeb() {
 
     dpkg -i $outputFile
 
-    clean $outputFile
+    remove $outputFile
     
     exinf "DONE - Installing VSCode"
 }
