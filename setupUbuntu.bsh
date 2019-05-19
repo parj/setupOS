@@ -112,7 +112,7 @@ function installJava() {
 function installDeb() {
     exeinf "START - Installing VSCODE"
 
-    local outpuFile="$tempLocation/vscode.deb"
+    local outputFile="$tempLocation/vscode.deb"
 
     remove $outputFile
 
