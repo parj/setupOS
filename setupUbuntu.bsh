@@ -13,6 +13,9 @@ main() {
     #installDeb vscode https://az764295.vo.msecnd.net/stable/a622c65b2c713c890fcf4fbf07cf34049d5fe758/code_1.34.0-1557957934_amd64.deb
     installSnap code
     installChrome
+    installBrew
+    installApt golang arc-theme
+    installOrancheloIconTheme
 }
 
 function init() {
@@ -47,7 +50,7 @@ function installApt() {
 
 function addNameServers() {
     exeinf "START - Adding in CloudFlare DNS Servers"
-    cp -p res/resolvconf/head /etc/resolvconf/resolv.conf.d/head
+    cp -p    res/resolvconf/head /etc/resolvconf/resolv.conf.d/head
     service resolvconf restart
     resolvconf -u
     exeinf "Config is now"
@@ -152,8 +155,33 @@ function installChrome() {
     if [[ ! -f /etc/apt/sources.list.d/google.list ]]; then
         wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - 
         echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list
-        installApt google-chrome-stable
     fi
+
+    installApt google-chrome-stable
+
+    echo "DONE - Installing Chrome"
+}
+
+function installBrew() {
+    echo "START - Installing Brew"
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
+
+    cat <<EOF 
+Add to profile    
+test -d ~/.linuxbrew && eval $(~/.linuxbrew/bin/brew shellenv)
+test -d /home/linuxbrew/.linuxbrew && eval $(/home/linuxbrew/.linuxbrew/bin/brew shellenv)
+test -r ~/.bash_profile && echo "eval \$($(brew --prefix)/bin/brew shellenv)" >>~/.bash_profile
+echo "eval \$($(brew --prefix)/bin/brew shellenv)" >>~/.profile
+EOF
+
+    echo "DONE - Installing Brew"
+}
+
+function installOrancheloIconTheme {
+    echo "START - Installing Oranchelo Icons"
+    add-apt-repository ppa:oranchelo/oranchelo-icon-theme
+    aptInstall oranchelo-icon-theme
+    echo "DONE - Installing Oranchelo Icons"
 }
 
 # From gist - https://gist.github.com/Bost/54291d824149f0c4157b40329fceb02c
