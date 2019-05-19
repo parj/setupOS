@@ -13,7 +13,7 @@ main() {
     #installDeb vscode https://az764295.vo.msecnd.net/stable/a622c65b2c713c890fcf4fbf07cf34049d5fe758/code_1.34.0-1557957934_amd64.deb
     installSnap code
     installChrome
-    installBrew
+    #installBrew
     installApt golang arc-theme
     installOrancheloIconTheme
 }
