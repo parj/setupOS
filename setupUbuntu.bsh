@@ -47,7 +47,7 @@ function installApt() {
 
 function addNameServers() {
     exeinf "START - Adding in CloudFlare DNS Servers"
-    mv res/resolvconf/head /etc/resolvconf/resolv.conf.d/head
+    cp -p res/resolvconf/head /etc/resolvconf/resolv.conf.d/head
     service resolvconf restart
     resolvconf -u
     exeinf "Config is now"
