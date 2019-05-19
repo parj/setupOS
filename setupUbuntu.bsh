@@ -30,8 +30,48 @@ function installApt() {
     apt-get -y install $@
 }
 
+function checkJava() {
+    JAVA_NOT_FOUND=true
+
+    if [[ ! -f /usr/lib/jvm/jdk/bin/java ]]; then
+        JAVA_NOT_FOUND=true
+    else
+        JAVA_VERSION=$(/usr/lib/jvm/jdk/bin/java -version 2>&1 | head -n1)
+
+        if [[ JAVA_VERSION == "openjdk version \"11.0.3\" 2019-04-16" ]]; then
+            JAVA_NOT_FOUND=false
+        fi
+    fi
+}
+
+function remove() {
+    if  [[ ! -z $1 ]] ;then
+        if [[ -d $1 ]] && [[ $1 != "/" ]]; then
+            exeinf "Deleting directory $1"
+            rm -rf $1
+        elif [[ -f $1 ]]; then
+            exeinf "Deleting file $1"
+            rm -f $1
+        fi
+    fi
+}
+
+function cleanFile() {
+
+}
+
+
 function installJava() {
     exeinf "STARTED - Installing openjdk 11.0.3"
+    
+    checkJava
+
+    if [[ JAVA_NOT_FOUND==false ]]; then
+        exeinf "Found and verified java"
+        exeinf "DONE"
+        return
+    fi
+
     outputFile="/tmp/jdk.tar.gz"
     checksumJava=$(/usr/bin/md5sum -c <<<"bff000442fd0d21cb70ffea8cf565c00 /tmp/jdk.tar.gz")
 
@@ -42,14 +82,30 @@ function installJava() {
     fi
 
     exeinf "Extracting java"
-    tar -C /tmp -xvzf /tmp/jdk.tar.gz
+    tar -C /tmp -xvzf $outputFile
     mkdir -p /usr/lib/jvm
     mv /tmp/jdk-11.0.3+7 /usr/lib/jvm
 
     exeinf "Creating soft link /usr/lib/jvm/jdk"
     ln -s /usr/lib/jvm/jdk-11.0.3+7 /usr/lib/jvm/jdk
+
+    exeinf "Checking for java"
     /usr/lib/jvm/jdk/bin/java -version
-    exeinf "DONE - Installing openjdk 11.0.3"
+
+    exinf "Add java to your PATH. Example: "
+    echo "export $JAVA_HOME=/usr/lib/jvm/jdk"
+    echo "export PATH=$JAVA_HOME/bin:$PATH"
+
+    exeinf "Cleaning up"
+    remove $outputFile
+    remove /tmp/jdk-11.0.3+7
+
+    exeinf "DONE - Installing openjdk 11.0.3" 
+}
+
+
+function installDeb() {
+
 }
 
 # From gist - https://gist.github.com/Bost/54291d824149f0c4157b40329fceb02c
