@@ -13,7 +13,7 @@ main() {
     #installDeb vscode https://az764295.vo.msecnd.net/stable/a622c65b2c713c890fcf4fbf07cf34049d5fe758/code_1.34.0-1557957934_amd64.deb
     installSnap code
     installChrome
-    #installBrew
+    #installBrew TODO - Run this as normal user
     installApt golang arc-theme
     installOrancheloIconTheme
 }
@@ -164,7 +164,7 @@ function installChrome() {
 
 function installBrew() {
     echo "START - Installing Brew"
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
+    sh sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
 
     cat <<EOF 
 Add to profile    
@@ -179,7 +179,14 @@ EOF
 
 function installOrancheloIconTheme {
     echo "START - Installing Oranchelo Icons"
-    add-apt-repository ppa:oranchelo/oranchelo-icon-theme
+    local checkIfAptExists=$(ls -1 /etc/apt/sources.list.d/oranchelo-ubuntu-oranchelo-icon-theme-*.list|wc -l)
+
+    if [[ $checkIfAptExists == 0 ]]; then
+        add-apt-repository ppa:oranchelo/oranchelo-icon-theme
+        local aptFile=$(ls -1 /etc/apt/sources.list.d/oranchelo-ubuntu-oranchelo-icon-theme-*.list)
+        #Hack to deal with disco release is not present
+        sed -i.bak s/disco/bionic/g $aptFile
+    fi
     aptInstall oranchelo-icon-theme
     echo "DONE - Installing Oranchelo Icons"
 }
