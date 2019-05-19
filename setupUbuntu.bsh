@@ -9,7 +9,9 @@ main() {
     updateUbuntu
     installApt git gnome-tweaks arc-theme wget curl
     installJava
-    installDeb vscode https://az764295.vo.msecnd.net/stable/a622c65b2c713c890fcf4fbf07cf34049d5fe758/code_1.34.0-1557957934_amd64.deb
+    #installDeb vscode https://az764295.vo.msecnd.net/stable/a622c65b2c713c890fcf4fbf07cf34049d5fe758/code_1.34.0-1557957934_amd64.deb
+    installSnap code
+    installChrome
 }
 
 function init() {
@@ -36,8 +38,10 @@ function updateUbuntu() {
 }
 
 function installApt() {
-    exeinf "Install $@"
+    exeinf "Installing $@"
+    apt-get update
     apt-get -y install $@
+    exeinf "Completed installing $@"
 }
 
 function checkJava() {
@@ -124,6 +128,18 @@ function installDeb() {
     remove $outputFile
     
     exeinf "DONE - Installing $1"
+}
+
+function installSnap() {
+    exeinf "START - Snap installing $1"
+    snap install $1 --classic
+    exeinf "DONE - Installing $1"
+}
+
+function installChrome() {
+    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - 
+    echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list
+    installApt google-chrome-stable
 }
 
 # From gist - https://gist.github.com/Bost/54291d824149f0c4157b40329fceb02c
