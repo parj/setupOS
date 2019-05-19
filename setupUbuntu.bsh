@@ -77,7 +77,7 @@ function installJava() {
         return
     fi
 
-    outputFile="$tempLocation/jdk.tar.gz"
+    local outputFile="$tempLocation/jdk.tar.gz"
     checksumJava=$(/usr/bin/md5sum -c <<<"bff000442fd0d21cb70ffea8cf565c00 $outpuFile")
 
     if [[ ! $checksumJava == "$outputFile: OK" ]]; then
@@ -112,16 +112,16 @@ function installJava() {
 function installDeb() {
     exeinf "START - Installing VSCODE"
 
-    outpuFile="$tempLocation/vscode.deb"
+    local outpuFile="$tempLocation/vscode.deb"
 
-    remove $outpuFile
+    remove $outputFile
 
     exeinf "Downloading VSCode"
-    wget https://az764295.vo.msecnd.net/stable/a622c65b2c713c890fcf4fbf07cf34049d5fe758/code_1.34.0-1557957934_amd64.deb -O $outpuFile
+    wget https://az764295.vo.msecnd.net/stable/a622c65b2c713c890fcf4fbf07cf34049d5fe758/code_1.34.0-1557957934_amd64.deb -O $outputFile
 
     dpkg -i $outputFile
 
-    clean $outpuFile
+    clean $outputFile
     
     exinf "DONE - Installing VSCode"
 }
