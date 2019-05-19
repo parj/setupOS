@@ -7,7 +7,7 @@ main() {
     init
     isRoot
     #updateUbuntu #Temporarily hashed out to speed up testing
-    installApt git gnome-tweaks arc-theme wget curl resolvconf vim
+    #installApt git gnome-tweaks arc-theme wget curl resolvconf vim
     addNameServers
     installJava
     #installDeb vscode https://az764295.vo.msecnd.net/stable/a622c65b2c713c890fcf4fbf07cf34049d5fe758/code_1.34.0-1557957934_amd64.deb
@@ -148,9 +148,12 @@ function installSnap() {
 }
 
 function installChrome() {
-    wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - 
-    echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list
-    installApt google-chrome-stable
+    echo "START - Installing Chrome"
+    if [[ ! -f /etc/apt/sources.list.d/google.list ]]; then
+        wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - 
+        echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list
+        installApt google-chrome-stable
+    fi
 }
 
 # From gist - https://gist.github.com/Bost/54291d824149f0c4157b40329fceb02c
