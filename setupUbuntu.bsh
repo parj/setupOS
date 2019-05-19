@@ -4,10 +4,20 @@
 set -e
 
 main() {
+    init
     isRoot
     updateUbuntu
     installApt git gnome-tweaks arc-theme wget curl
     installJava
+    installDeb
+}
+
+function init() {
+    exeinf "Starting setup."
+    tempLocation="/tmp/setup"
+
+    mkdir -p $tempLocation
+    exeinf "Storing files in $tempLocation"
 }
 
 function isRoot() {
@@ -56,11 +66,6 @@ function remove() {
     fi
 }
 
-function cleanFile() {
-
-}
-
-
 function installJava() {
     exeinf "STARTED - Installing openjdk 11.0.3"
     
@@ -72,8 +77,8 @@ function installJava() {
         return
     fi
 
-    outputFile="/tmp/jdk.tar.gz"
-    checksumJava=$(/usr/bin/md5sum -c <<<"bff000442fd0d21cb70ffea8cf565c00 /tmp/jdk.tar.gz")
+    outputFile="$tempLocation/jdk.tar.gz"
+    checksumJava=$(/usr/bin/md5sum -c <<<"bff000442fd0d21cb70ffea8cf565c00 $outpuFile")
 
     if [[ ! $checksumJava == "$outputFile: OK" ]]; then
         exeinf "Downloading Java as checksum failed or file missing"
@@ -82,9 +87,9 @@ function installJava() {
     fi
 
     exeinf "Extracting java"
-    tar -C /tmp -xvzf $outputFile
+    tar -C $tempLocation -xvzf $outputFile
     mkdir -p /usr/lib/jvm
-    mv /tmp/jdk-11.0.3+7 /usr/lib/jvm
+    mv $tempLocation/jdk-11.0.3+7 /usr/lib/jvm
 
     exeinf "Creating soft link /usr/lib/jvm/jdk"
     ln -s /usr/lib/jvm/jdk-11.0.3+7 /usr/lib/jvm/jdk
@@ -98,14 +103,27 @@ function installJava() {
 
     exeinf "Cleaning up"
     remove $outputFile
-    remove /tmp/jdk-11.0.3+7
+    remove $tempLocation/jdk-11.0.3+7
 
     exeinf "DONE - Installing openjdk 11.0.3" 
 }
 
 
 function installDeb() {
+    exeinf "START - Installing VSCODE"
 
+    outpuFile="$tempLocation/vscode.deb"
+
+    remove $outpuFile
+
+    exeinf "Downloading VSCode"
+    wget https://az764295.vo.msecnd.net/stable/a622c65b2c713c890fcf4fbf07cf34049d5fe758/code_1.34.0-1557957934_amd64.deb -O $outpuFile
+
+    dpkg -i $outputFile
+
+    clean $outpuFile
+    
+    exinf "DONE - Installing VSCode"
 }
 
 # From gist - https://gist.github.com/Bost/54291d824149f0c4157b40329fceb02c
