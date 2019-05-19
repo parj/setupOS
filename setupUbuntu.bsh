@@ -6,8 +6,9 @@ set -e
 main() {
     init
     isRoot
-    updateUbuntu
-    installApt git gnome-tweaks arc-theme wget curl
+    #updateUbuntu #Temporarily hashed out to speed up testing
+    installApt git gnome-tweaks arc-theme wget curl resolvconf vim
+    addNameServers
     installJava
     #installDeb vscode https://az764295.vo.msecnd.net/stable/a622c65b2c713c890fcf4fbf07cf34049d5fe758/code_1.34.0-1557957934_amd64.deb
     installSnap code
@@ -32,16 +33,24 @@ function isRoot() {
 
 function updateUbuntu() {
     exeinf "Upgrading linux"
-    apt-get update 
-    apt-get -y upgrade 
+    apt update 
+    apt -y upgrade 
     apt -y autoremove
 }
 
 function installApt() {
     exeinf "Installing $@"
-    apt-get update
-    apt-get -y install $@
+    apt update
+    apt install -y $@
     exeinf "Completed installing $@"
+}
+
+function addNameServers() {
+    exeinf "START - Adding in CloudFlare DNS Servers"
+    mv res/resolvconf/head /etc/resolvconf/resolv.conf.d/head
+    service resolvconf restart
+    systemd-resolve --status
+    exeinf "DONE - Adding in nameserver"
 }
 
 function checkJava() {
