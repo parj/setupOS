@@ -49,7 +49,9 @@ function addNameServers() {
     exeinf "START - Adding in CloudFlare DNS Servers"
     mv res/resolvconf/head /etc/resolvconf/resolv.conf.d/head
     service resolvconf restart
-    systemd-resolve --status
+    resolvconf -u
+    exeinf "Config is now"
+    cat /etc/resolv.conf
     exeinf "DONE - Adding in nameserver"
 }
 
